@@ -1,11 +1,11 @@
 /**
  * Create new HTMLElement. By default is DIV.
- * @param {object} attrs Element attributes
  * @param {*} children Element childrend (HTMLElement, array of HTMLElements, string, HTML string, array of strings)
+ * @param {object} attrs Element attributes
  * @param {string} tag Element tag. By default is DIV
  * @returns {HTMLElement}
  */
-export default function el (attrs={}, children=null, tag='div') {
+export default function el (children=null, attrs={}, tag='div') {
   let _el = document.createElement(tag);
   for (let attrName in attrs) {
     if (attrs.hasOwnProperty(attrName)) {
@@ -16,7 +16,7 @@ export default function el (attrs={}, children=null, tag='div') {
     if (children instanceof Array) {
       for (let i=0,ln=children.length; i<ln; i++) {
         if (typeof children[i]==='array' || typeof children[i]==='string') {
-          _el.appendChild(el({}, children[i]));
+          _el.appendChild(el(children[i]));
         } else {
           _el.appendChild(children[i]);
         }
