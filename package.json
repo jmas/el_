@@ -1,0 +1,23 @@
+{
+  "name": "el_",
+  "version": "1.0.0",
+  "description": "Super lightweight tool for create DOM elements.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmas/el_.git"
+  },
+  "keywords": [
+    "DOM",
+    "HTMLElement"
+  ],
+  "author": "Maslakov Alexander <jmas.ukraine@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jmas/el_/issues"
+  },
+  "homepage": "https://github.com/jmas/el_#readme"
+}
