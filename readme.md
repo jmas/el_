@@ -8,7 +8,7 @@ Super lightweight tool for create DOM elements.
 
 # Quick code example
 
-```
+```js
 import {el, apply} from 'el_';
 
 apply(document.body, apply(el(`
