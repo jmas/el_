@@ -32,7 +32,7 @@ function el (children=null, attrs={}, tag='div') {
 
 /**
  * Apply a object of {selector: {function|string|HTMLElement}} to target element.
- * This function is searching for selector and trying to append value to found element.
+ * This function is searching for element of selector and replace content of found element.
  * If value is a function it will be called with argument that contain element that found by selector.
  * If value is a string it will be just inserted as a HTML content.
  * If value is an HTMLElement it will be appended as a child element.
@@ -59,6 +59,7 @@ function apply (el, children) {
         } else if (typeof children[key]==='string') {
           placeholderEl.innerHTML = children[key];
         } else {
+          placeholderEl.innerHTML = '';
           placeholderEl.appendChild(children[key]);
         }
       } else {
