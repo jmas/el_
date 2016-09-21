@@ -40,23 +40,23 @@ function el (children=null, attrs={}, tag='div') {
  * @param {object} An object that contain {selector: {function|string|HTMLElement}}
  * @returns {HTMLElement}
  */
-function apply (el, children) {
+function apply (element, children) {
   if (typeof el === 'string') {
-    el = el(el);
+    element = el(element);
   }
   if (children instanceof Array) {
     for (let i=0,ln=children.length; i<ln; i++) {
-      apply(el, children[i]);
+      apply(element, children[i]);
     }
-    return el;
+    return element;
   } else if (children instanceof HTMLElement) {
-    el.innerHTML = '';
-    el.appendChild(children);
-    return el;
+    element.innerHTML = '';
+    element.appendChild(children);
+    return element;
   }
   for (let key in children) {
     if (children.hasOwnProperty(key)) {
-      let placeholderEl = el.querySelector(key);
+      let placeholderEl = element.querySelector(key);
       if (placeholderEl) {
         if (typeof children[key]==='function') {
           children[key](placeholderEl);
@@ -74,7 +74,7 @@ function apply (el, children) {
       }
     }
   }
-  return el;
+  return element;
 }
 
 module.exports = {el, apply};
