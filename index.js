@@ -46,6 +46,10 @@ function apply (el, children) {
       apply(el, children[i]);
     }
     return el;
+  } else if (children instanceof HTMLElement) {
+    el.innerHTML = '';
+    el.appendChild(children);
+    return el;
   }
   for (let key in children) {
     if (children.hasOwnProperty(key)) {
