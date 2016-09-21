@@ -31,6 +31,18 @@ function el (children=null, attrs={}, tag='div') {
 }
 
 /**
+ * Refresh content of containerEl.
+ * @param {HTMLElement} Container element
+ * @param {HTMLElement} Children element
+ * @returns {HTMLElement}
+ */
+function refresh (containerEl, childrenEl) {
+  containerEl.innerHTML = '';
+  containerEl.appendChild(childrenEl);
+  return containerEl;
+}
+
+/**
  * Apply a object of {selector: {function|string|HTMLElement}} to target element.
  * This function is searching for element of selector and replace content of found element.
  * If value is a function it will be called with argument that contain element that found by selector.
@@ -50,8 +62,7 @@ function apply (element, children) {
     }
     return element;
   } else if (children instanceof HTMLElement) {
-    element.innerHTML = '';
-    element.appendChild(children);
+    refresh(placeholderEl, children);
     return element;
   }
   for (let key in children) {
@@ -63,11 +74,9 @@ function apply (element, children) {
         } else if (typeof children[key]==='string') {
           placeholderEl.innerHTML = children[key];
         } else if (children[key] instanceof HTMLElement) {
-          placeholderEl.innerHTML = '';
-          placeholderEl.appendChild(children[key]);
+          refresh(placeholderEl, el(children[key]));
         } else {
-          placeholderEl.innerHTML = '';
-          placeholderEl.appendChild(el(children[key]));
+          refresh(placeholderEl, el(children[key]));
         }
       } else {
         throw new Error(`Selector '${key}' is not found.`);
@@ -77,4 +86,4 @@ function apply (element, children) {
   return element;
 }
 
-module.exports = {el, apply};
+module.exports = {el, apply, refresh};
