@@ -21,10 +21,10 @@ function el (children=null, attrs={}, tag='div') {
           _el.appendChild(children[i]);
         }
       }
-    } else if (typeof children==='string') {
-      _el.innerHTML = children;
-    } else {
+    } else if (children instanceof HTMLElement) {
       _el.appendChild(children);
+    } else {
+      _el.innerHTML = children;
     }
   }
   return _el;
@@ -66,7 +66,8 @@ function apply (el, children) {
           placeholderEl.innerHTML = '';
           placeholderEl.appendChild(children[key]);
         } else {
-          throw new Error(`The right type of object property value is: 'function', 'string' or 'HTMLElement'. Got '${typeof children[key]}'.`);
+          placeholderEl.innerHTML = '';
+          placeholderEl.appendChild(el(children[key]));
         }
       } else {
         throw new Error(`Selector '${key}' is not found.`);
