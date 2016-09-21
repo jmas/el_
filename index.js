@@ -41,6 +41,9 @@ function el (children=null, attrs={}, tag='div') {
  * @returns {HTMLElement}
  */
 function apply (el, children) {
+  if (typeof el === 'string') {
+    el = el(el);
+  }
   if (children instanceof Array) {
     for (let i=0,ln=children.length; i<ln; i++) {
       apply(el, children[i]);
