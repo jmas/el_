@@ -55,16 +55,15 @@ function apply (el, children) {
     if (children.hasOwnProperty(key)) {
       let placeholderEl = el.querySelector(key);
       if (placeholderEl) {
-        if (!children[key]) {
-          throw new Error(`The right type of object property value is: 'function', 'string' or 'HTMLElement'. Got '${typeof children[key]}'.`);
-        }
         if (typeof children[key]==='function') {
           children[key](placeholderEl);
         } else if (typeof children[key]==='string') {
           placeholderEl.innerHTML = children[key];
-        } else {
+        } else if (children[key] instanceof HTMLElement) {
           placeholderEl.innerHTML = '';
           placeholderEl.appendChild(children[key]);
+        } else {
+          throw new Error(`The right type of object property value is: 'function', 'string' or 'HTMLElement'. Got '${typeof children[key]}'.`);
         }
       } else {
         throw new Error(`Selector '${key}' is not found.`);

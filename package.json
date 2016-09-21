@@ -1,6 +1,6 @@
 {
   "name": "el_",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Super lightweight tool for create DOM elements.",
   "main": "index.js",
   "scripts": {
