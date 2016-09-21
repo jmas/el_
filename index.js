@@ -1,6 +1,6 @@
 /**
  * Create new HTMLElement. By default is DIV.
- * @param {*} children Element childrend (HTMLElement, array of HTMLElements, string, HTML string, array of strings)
+ * @param {array|string|HTMLElement} children Element childrend (HTMLElement, array of HTMLElements, string, HTML string, array of strings)
  * @param {object} attrs Element attributes
  * @param {string} tag Element tag. By default is DIV
  * @returns {HTMLElement}
@@ -36,7 +36,7 @@ function el (children=null, attrs={}, tag='div') {
  * If value is a function it will be called with argument that contain element that found by selector.
  * If value is a string it will be just inserted as a HTML content.
  * If value is an HTMLElement it will be appended as a child element.
- * @param {HTMLElement} An target element
+ * @param {HTMLElement|string} An target element
  * @param {object} An object that contain {selector: {function|string|HTMLElement}}
  * @returns {HTMLElement}
  */
