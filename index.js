@@ -41,7 +41,7 @@ function el (children=null, attrs={}, tag='div') {
  * @returns {HTMLElement}
  */
 function apply (element, children) {
-  if (typeof el === 'string') {
+  if (typeof element==='string') {
     element = el(element);
   }
   if (children instanceof Array) {
