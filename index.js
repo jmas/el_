@@ -62,7 +62,7 @@ function apply (element, children) {
     }
     return element;
   } else if (children instanceof HTMLElement) {
-    refresh(placeholderEl, children);
+    refresh(element, children);
     return element;
   }
   for (let key in children) {
