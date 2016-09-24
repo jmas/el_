@@ -27,7 +27,7 @@ function $el (children=null, attrs=null, tag=DEFAULT_TAG) {
   if (attrs) {
     let attrsNames = [];
     for (let attrName in attrs) if (attrs.hasOwnProperty(attrName)) {
-      attrsNames = attrName;
+      attrsNames.push(attrName);
     }
     // put `find` attrs to the top of list
     attrsNames = attrsNames.sort((a, b) => {
