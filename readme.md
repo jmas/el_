@@ -11,7 +11,7 @@ Super lightweight tool for create DOM elements.
 ```js
 import {$el} from 'el_';
 
-document.body.appendCild($el(`
+document.body.appendChild($el(`
   <h1></h1>
   <form id="form">
     <input id="query" type="text" />
