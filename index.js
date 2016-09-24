@@ -31,7 +31,9 @@ function $el (children=null, attrs=null, tag=DEFAULT_TAG) {
     }
     // put `find` attrs to the top of list
     attrsNames = attrsNames.sort((a, b) => {
-      return -a.indexOf('find');
+      let _ai = a.indexOf('find');
+      let _bi = b.indexOf('find');
+      return (_ai===-1 && _bi===-1 ? 0: (_ai!==-1 && _bi===-1 ? -1: 1));
     });
     for (let i=0,ln=attrsNames.length; i<ln; i++) {
       let attrName = attrsNames[i];
