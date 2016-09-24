@@ -78,7 +78,7 @@ function $el (content=null, attrs=null, tag=DEFAULT_TAG) {
           }
         }
       } else {
-        _el[attrName] = attrs[attrName];
+        _el.setAttribute(attrName, attrs[attrName]);
       }
     }
   }
