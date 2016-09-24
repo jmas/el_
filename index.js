@@ -1,17 +1,14 @@
+const DEFAULT_TAG = 'div';
+
 /**
- * Create new HTMLElement. By default is DIV.
+ * Create new HTMLElement.
  * @param {array|string|HTMLElement} children Element childrend (HTMLElement, array of HTMLElements, string, HTML string, array of strings)
- * @param {object} attrs Element attributes
+ * @param {object} attrs Element attributes. Special attributes `onclick #selector`, `find #selector`
  * @param {string} tag Element tag. By default is DIV
  * @returns {HTMLElement}
  */
-function el (children=null, attrs={}, tag='div') {
+function $el (children=null, attrs={}, tag=DEFAULT_TAG) {
   let _el = document.createElement(tag);
-  for (let attrName in attrs) {
-    if (attrs.hasOwnProperty(attrName)) {
-      _el[attrName] = (attrName.indexOf('on')===0 ? attrs[attrName].bind(null, _el): attrs[attrName]);
-    }
-  }
   if (children) {
     if (children instanceof Array) {
       for (let i=0,ln=children.length; i<ln; i++) {
@@ -27,63 +24,44 @@ function el (children=null, attrs={}, tag='div') {
       _el.innerHTML = children;
     }
   }
+  for (let attrName in attrs) if (attrs.hasOwnProperty(attrName)) {
+    if (attrName.indexOf('on')===0) {
+      if (attrName.indexOf(' ')!==-1 && children) {
+        let [ eventName, selector ] = attrName.split(' ');
+        let _els = _el.querySelectorAll(selector);
+        let _elsLength = _els.length;
+        if (_elsLength>0) {
+          for (let i=0; i<_elsLength; i++) {
+            _els[i][eventName] = attrs[attrName].bind(null, _els[i]);
+          }
+        }
+      } else {
+        _el[attrName] = attrs[attrName].bind(null, _el);
+      }
+    } else if (attrName.indexOf('find')===0 && children) {
+      let [ eventName, selector ] = attrName.split(' ');
+      let _els = _el.querySelectorAll(selector);
+      let _elsLength = _els.length;
+      if (_elsLength>0) {
+        for (let i=0; i<_elsLength; i++) {
+          if (typeof attrs[attrName]==='function') {
+            attrs[attrName](_els[i]);
+          } else if (typeof attrs[attrName]==='string') {
+            _els[i].innerHTML = attrs[attrName];
+          } else if (attrs[attrName] instanceof HTMLElement) {
+            _els[i].innerHTML = '';
+            _els[i].appendChild(attrs[attrName]);
+          } else {
+            _els[i].innerHTML = '';
+            _els[i].appendChild($el(attrs[attrName]));
+          }
+        }
+      }
+    } else {
+      _el[attrName] = attrs[attrName];
+    }
+  }
   return _el;
 }
 
-/**
- * Refresh content of containerEl.
- * @param {HTMLElement} Container element
- * @param {HTMLElement} Children element
- * @returns {HTMLElement}
- */
-function refresh (containerEl, childrenEl) {
-  containerEl.innerHTML = '';
-  containerEl.appendChild(childrenEl);
-  return containerEl;
-}
-
-/**
- * Apply a object of {selector: {function|string|HTMLElement}} to target element.
- * This function is searching for element of selector and replace content of found element.
- * If value is a function it will be called with argument that contain element that found by selector.
- * If value is a string it will be just inserted as a HTML content.
- * If value is an HTMLElement it will be appended as a child element.
- * @param {HTMLElement|string} An target element
- * @param {object} An object that contain {selector: {function|string|HTMLElement}}
- * @returns {HTMLElement}
- */
-function apply (element, children) {
-  if (typeof element==='string') {
-    element = el(element);
-  }
-  if (children instanceof Array) {
-    for (let i=0,ln=children.length; i<ln; i++) {
-      apply(element, children[i]);
-    }
-    return element;
-  } else if (children instanceof HTMLElement) {
-    refresh(element, children);
-    return element;
-  }
-  for (let key in children) {
-    if (children.hasOwnProperty(key)) {
-      let placeholderEl = element.querySelector(key);
-      if (placeholderEl) {
-        if (typeof children[key]==='function') {
-          children[key](placeholderEl);
-        } else if (typeof children[key]==='string') {
-          placeholderEl.innerHTML = children[key];
-        } else if (children[key] instanceof HTMLElement) {
-          refresh(placeholderEl, el(children[key]));
-        } else {
-          refresh(placeholderEl, el(children[key]));
-        }
-      } else {
-        throw new Error(`Selector '${key}' is not found.`);
-      }
-    }
-  }
-  return element;
-}
-
-module.exports = {el, apply, refresh};
+module.exports = { $el };
