@@ -2,12 +2,12 @@ const DEFAULT_TAG = 'div';
 
 /**
  * Create new HTMLElement.
- * @param {array|string|HTMLElement} children Element childrend (HTMLElement, array of HTMLElements, string, HTML string, array of strings)
- * @param {object} attrs Element attributes. Special attributes `onclick #selector`, `find #selector`
+ * @param {null|array|string|HTMLElement} children Element childrend (HTMLElement, array of HTMLElements, string, HTML string, array of strings)
+ * @param {null|object} attrs Element attributes. Special attributes `onclick #selector`, `find #selector`
  * @param {string} tag Element tag. By default is DIV
  * @returns {HTMLElement}
  */
-function $el (children=null, attrs={}, tag=DEFAULT_TAG) {
+function $el (children=null, attrs=null, tag=DEFAULT_TAG) {
   let _el = document.createElement(tag);
   if (children) {
     if (children instanceof Array) {
@@ -24,41 +24,43 @@ function $el (children=null, attrs={}, tag=DEFAULT_TAG) {
       _el.innerHTML = children;
     }
   }
-  for (let attrName in attrs) if (attrs.hasOwnProperty(attrName)) {
-    if (attrName.indexOf('on')===0) {
-      if (attrName.indexOf(' ')!==-1 && children) {
+  if (attrs) {
+    for (let attrName in attrs) if (attrs.hasOwnProperty(attrName)) {
+      if (attrName.indexOf('on')===0) {
+        if (attrName.indexOf(' ')!==-1 && children) {
+          let [ eventName, selector ] = attrName.split(' ');
+          let _els = _el.querySelectorAll(selector);
+          let _elsLength = _els.length;
+          if (_elsLength>0) {
+            for (let i=0; i<_elsLength; i++) {
+              _els[i][eventName] = attrs[attrName].bind(null, _els[i]);
+            }
+          }
+        } else {
+          _el[attrName] = attrs[attrName].bind(null, _el);
+        }
+      } else if (attrName.indexOf('find')===0 && children) {
         let [ eventName, selector ] = attrName.split(' ');
         let _els = _el.querySelectorAll(selector);
         let _elsLength = _els.length;
         if (_elsLength>0) {
           for (let i=0; i<_elsLength; i++) {
-            _els[i][eventName] = attrs[attrName].bind(null, _els[i]);
+            if (typeof attrs[attrName]==='function') {
+              attrs[attrName](_els[i]);
+            } else if (typeof attrs[attrName]==='string') {
+              _els[i].innerHTML = attrs[attrName];
+            } else if (attrs[attrName] instanceof HTMLElement) {
+              _els[i].innerHTML = '';
+              _els[i].appendChild(attrs[attrName]);
+            } else {
+              _els[i].innerHTML = '';
+              _els[i].appendChild($el(attrs[attrName]));
+            }
           }
         }
       } else {
-        _el[attrName] = attrs[attrName].bind(null, _el);
+        _el[attrName] = attrs[attrName];
       }
-    } else if (attrName.indexOf('find')===0 && children) {
-      let [ eventName, selector ] = attrName.split(' ');
-      let _els = _el.querySelectorAll(selector);
-      let _elsLength = _els.length;
-      if (_elsLength>0) {
-        for (let i=0; i<_elsLength; i++) {
-          if (typeof attrs[attrName]==='function') {
-            attrs[attrName](_els[i]);
-          } else if (typeof attrs[attrName]==='string') {
-            _els[i].innerHTML = attrs[attrName];
-          } else if (attrs[attrName] instanceof HTMLElement) {
-            _els[i].innerHTML = '';
-            _els[i].appendChild(attrs[attrName]);
-          } else {
-            _els[i].innerHTML = '';
-            _els[i].appendChild($el(attrs[attrName]));
-          }
-        }
-      }
-    } else {
-      _el[attrName] = attrs[attrName];
     }
   }
   return _el;
