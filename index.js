@@ -8,27 +8,28 @@ const requestAnimationFrame = (fn) => {
 };
 
 /**
- * Create new element.
- * @param {null|array|string|HTMLElement} children Element children (HTMLElement, array of HTMLElements, string, HTML string, array of strings)
+ * Create or update DOM element.
+ * If content is string - new HTMLElement will be created and string will be putted as HTML content of it.
+ * If content is HTMLElement - attrs will be applyed to this HTMLElement.
+ * If content is array - new HTMLElement will be created and each array item will be appended to it.
+ * @param {null|array|string|HTMLElement} content Content can be: HTMLElement, array<HTMLElements>, array<string>, string
  * @param {null|object} attrs Element attributes. Special attributes `onclick #selector`, `find #selector`
  * @param {string} tag Element tag. By default is DIV
  * @returns {HTMLElement}
  */
-function $el (children=null, attrs=null, tag=DEFAULT_TAG) {
-  let _el = document.createElement(tag);
-  if (children) {
-    if (children instanceof Array) {
-      for (let i=0,ln=children.length; i<ln; i++) {
-        if (typeof children[i]==='array' || typeof children[i]==='string') {
-          _el.appendChild(el(children[i]));
+function $el (content=null, attrs=null, tag=DEFAULT_TAG) {
+  let _el = (content instanceof HTMLElement ? content: document.createElement(tag));
+  if (!(content instanceof HTMLElement) && content) {
+    if (content instanceof Array) {
+      for (let i=0,ln=content.length; i<ln; i++) {
+        if (typeof content[i]==='array' || typeof content[i]==='string') {
+          _el.appendChild($el(content[i]));
         } else {
-          _el.appendChild(children[i]);
+          _el.appendChild(content[i]);
         }
       }
-    } else if (children instanceof HTMLElement) {
-      _el.appendChild(children);
     } else {
-      _el.innerHTML = children;
+      _el.innerHTML = content;
     }
   }
   if (attrs) {
@@ -45,7 +46,7 @@ function $el (children=null, attrs=null, tag=DEFAULT_TAG) {
     for (let i=0,ln=attrsNames.length; i<ln; i++) {
       let attrName = attrsNames[i];
       if (attrName.indexOf('on')===0) {
-        if (attrName.indexOf(' ')!==-1 && children) {
+        if (attrName.indexOf(' ')!==-1 && content) {
           let [ eventName, selector ] = attrName.split(' ');
           let _els = _el.querySelectorAll(selector);
           let _elsLength = _els.length;
@@ -57,7 +58,7 @@ function $el (children=null, attrs=null, tag=DEFAULT_TAG) {
         } else {
           _el[attrName] = attrs[attrName].bind(null, _el);
         }
-      } else if (attrName.indexOf('find')===0 && children) {
+      } else if (attrName.indexOf('find')===0 && content) {
         let [ eventName, selector ] = attrName.split(' ');
         let _els = _el.querySelectorAll(selector);
         let _elsLength = _els.length;
