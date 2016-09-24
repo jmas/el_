@@ -25,7 +25,16 @@ function $el (children=null, attrs=null, tag=DEFAULT_TAG) {
     }
   }
   if (attrs) {
+    let attrsNames = [];
     for (let attrName in attrs) if (attrs.hasOwnProperty(attrName)) {
+      attrsNames = attrName;
+    }
+    // put `find` attrs to the top of list
+    attrsNames = attrsNames.sort((a, b) => {
+      return -a.indexOf('find');
+    });
+    for (let i=0,ln=attrsNames.length; i<ln; i++) {
+      let attrName = attrsNames[i];
       if (attrName.indexOf('on')===0) {
         if (attrName.indexOf(' ')!==-1 && children) {
           let [ eventName, selector ] = attrName.split(' ');
