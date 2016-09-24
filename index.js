@@ -1,8 +1,8 @@
 const DEFAULT_TAG = 'div';
 
 /**
- * Create new HTMLElement.
- * @param {null|array|string|HTMLElement} children Element childrend (HTMLElement, array of HTMLElements, string, HTML string, array of strings)
+ * Create new element.
+ * @param {null|array|string|HTMLElement} children Element children (HTMLElement, array of HTMLElements, string, HTML string, array of strings)
  * @param {null|object} attrs Element attributes. Special attributes `onclick #selector`, `find #selector`
  * @param {string} tag Element tag. By default is DIV
  * @returns {HTMLElement}
