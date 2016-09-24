@@ -1,6 +1,6 @@
 # El tool
 
-Super lightweight tool for create DOM elements.
+Super lightweight tool for creating DOM elements.
 
 # Examples
 
