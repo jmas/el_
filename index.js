@@ -1,4 +1,11 @@
 const DEFAULT_TAG = 'div';
+const requestAnimationFrame = (fn) => {
+  if ('requestAnimationFrame' in window) {
+    window.requestAnimationFrame(fn);
+  } else {
+    window.setTimeout(fn, 100);
+  }
+};
 
 /**
  * Create new element.
@@ -57,7 +64,7 @@ function $el (children=null, attrs=null, tag=DEFAULT_TAG) {
         if (_elsLength>0) {
           for (let i=0; i<_elsLength; i++) {
             if (typeof attrs[attrName]==='function') {
-              attrs[attrName](_els[i]);
+              requestAnimationFrame(() => attrs[attrName](_els[i]));
             } else if (typeof attrs[attrName]==='string') {
               _els[i].innerHTML = attrs[attrName];
             } else if (attrs[attrName] instanceof HTMLElement) {
